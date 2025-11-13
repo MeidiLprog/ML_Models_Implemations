@@ -1,0 +1,17 @@
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+seaborn
+cvxpy
+sympy
+statsmodels
+jupyter
+notebook
+pytest
+tqdm
+joblib
+requests
+plotly
+pillow
