@@ -67,6 +67,34 @@ def merge_two_list(l1,l2):
         current.next = l2
     return dummy.next
 
+def l_merging_for_k_list(lists):
+
+    #cases for empty lists or 
+    if len(lists) == 0:
+        raise ValueError("No list to be found !")
+    if len(lists) == 1:
+        print("List already sorted out !")
+        return lists
+    
+
+
+    while len(lists) > 1:
+        l_final = []  
+        for i in range(0,len(lists),2):
+            l1 = lists[i]
+            if i+1 < len(lists): # I impose this verification in case there is an odd number of lists
+                l2 = lists[i+1]
+            else:
+                l2 = None
+            l_final.append(merge_two_list(l1,l2))
+        lists = l_final
+    return l_final[0] # I return the chained linked list
+
+
+
+
+
+
 
 
 
