@@ -23,6 +23,10 @@ class Node:
             raise ValueError("Must be an int")
         self._val = new_value
         
+    @next.setter
+    def next(self,new_next):
+        self._next = new_next
+
 
 def create_chained_list(list) -> list:
     head = None
@@ -34,13 +38,12 @@ def create_chained_list(list) -> list:
     return head
 
 def print_chained_list(head):
+    values = []
     current = head
-    while current is not None:
-        print(f"Value in node : {current.val}", end="->")
+    while current:
+        values.append(str(current.val))
         current = current.next
-    print("None")
-    return
-
+    print(" -> ".join(values))
 '''
 I use a mergin algorithm, since lists are already sorted out
 I dont need to sort anything, therefore I create a function that merge two list
@@ -77,7 +80,6 @@ def l_merging_for_k_list(lists):
         return lists
     
 
-
     while len(lists) > 1:
         l_final = []  
         for i in range(0,len(lists),2):
@@ -92,11 +94,23 @@ def l_merging_for_k_list(lists):
 
 
 
+#test
 
+ex_lists = [
+    [1, 4, 5],
+    [1, 3, 4],
+    [2, 6],
+    [3,6,42,45,65,80],
+    [7,9,25,33,43]
+]
 
+ch_list = [create_chained_list(l) for l in ex_lists]
 
+final = l_merging_for_k_list(ch_list)
 
+#display results:
 
+print_chained_list(final)
 
 
 
