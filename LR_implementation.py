@@ -20,6 +20,15 @@ class LogisticRegression:
         self.optimize = optimizer
         self.iterations = iterations
         
+        self.beta = None
+        self.Loss_cost = []
+
+    def Loss(self, X,y,beta):
+        p = sigmoid(X @ beta)
+        #I added an epsilone to prevent log(0) otherwise it's gonna be infinite and the program shall crash
+        eps = 1e-12
+        cost = -(1/len(y))* np.sum(y*np.log(p+eps) + (1-y)*np.log(1-p+eps))
+        return cost
 
     def fit(X,y):
         pass
