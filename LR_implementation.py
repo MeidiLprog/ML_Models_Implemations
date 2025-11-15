@@ -17,7 +17,11 @@ def sigmoid(z : int):
 
 class LogisticRegression:
     def __init__(self, optimizer="gradient", iterations=200):
-        self.optimize = optimizer
+        if optimizer.lower() == "gradient" or optimizer.lower() == "newton":
+            self.optimize = optimizer
+        else:
+            raise ValueError("gradient and newton are the only acceptable methods \n")
+        
         self.iterations = iterations
         
         self.beta = None
@@ -32,32 +36,62 @@ class LogisticRegression:
 
     def fit(self,X,y):
         
+        if self.optimize == "gradient":
+            #I need to add the biais to X beta0 + beta1 x1 + beta2 x2 ... beta n xn
+            X = np.hstack([np.ones((X.shape[0],1)),X])
 
-        #I need to add the biais to X beta0 + beta1 x1 + beta2 x2 ... beta n xn
-        X = np.hstack([np.ones((X.shape[0],1)),X])
+            #Retrieving Highst lambda value from SVD
+            _, S, _ = np.linalg.svd(X,full_matrices=False)
+            _highest_lambda = S[0]
 
-        #Retrieving Highst lambda value from SVD
-        _, S, _ = np.linalg.svd(X,full_matrices=False)
-        _highest_lambda = S[0]
-
-        #here I initialize beta as I need to do a matrix multiplicate with X
-        beta = np.zeros(X.shape[1])
+            #here I initialize beta as I need to do a matrix multiplicate with X
+            beta = np.zeros(X.shape[1])
 
 
-        alpha = 4/(_highest_lambda**2)
+            alpha = 4/(_highest_lambda**2)
 
-        for i in range(self.iterations):
-           
-           #calculation of the gradient here sigmoid play the role of X*THETA in MSE, we just use the probalistic approach
-            gradient = X.T @ (sigmoid(X @ beta) - y) 
-            #calculation of parameters beta without momentum, applying a normal GD       
-            beta = beta - alpha * gradient
-           
-            self.Loss_cost.append(self.Loss(X,y,beta)) # I save the beta to plot the convergence of it
-            if np.linalg.norm(gradient) < 1e-6:
-                print("Local globalizer of f found \n")
-                break
-        self.beta = beta
+            for i in range(self.iterations):
+            
+            #calculation of the gradient here sigmoid play the role of X*THETA in MSE, we just use the probalistic approach
+                gradient = X.T @ (sigmoid(X @ beta) - y) 
+                #calculation of parameters beta without momentum, applying a normal GD       
+                beta = beta - alpha * gradient
+            
+                self.Loss_cost.append(self.Loss(X,y,beta)) # I save the beta to plot the convergence of it
+                if np.linalg.norm(gradient) < 1e-6:
+                    print("Local globalizer of f found \n")
+                    break
+            self.beta = beta
+        
+        elif self.optimize == "newton":
+
+            t = 0
+
+            while t < self.iterations:
+
+                # probas
+                p = sigmoid(X @ beta)
+
+                # gradient
+                gradient = X.T @ (p - y)
+
+                W = np.diag(p * (1 - p))
+
+                H = X.T @ W @ X
+                delta = np.linalg.solve(H, gradient)
+                beta = beta - delta
+                self.Loss_cost.append(self.Loss(X, y, beta))
+
+                # arrêt
+                if np.linalg.norm(gradient) < 1e-6:
+                    print("Convergence Newton")
+                    break
+
+                t += 1
+
+            self.beta = beta
+
+
 
     def predict(self,X):
         
@@ -73,7 +107,7 @@ import matplotlib.pyplot as plt
 
 X , y = datasets[0]
 
-model = LogisticRegression(optimizer="gradient", iterations=200)
+model = LogisticRegression(optimizer="newton", iterations=200)
 model.fit(X,y)
 
 
