@@ -49,15 +49,16 @@ class Tree:
         #return Gini
         return 1 - sum_sq
         
-
+    #Important to remember, the loss is a a function to minimise
     def Loss(self,YLEFT,YRIGHT):
+        #when split I need to retrieve nb_observations from left and right side in the node ex nb yes and nb_ no
         n_left = len(YLEFT)
         n_right = len(YRIGHT)
-        
+        #Calculating the sum of it for the loss + check of zero
         total = int(n_left) + int(n_right)
         if total == 0:
             raise ValueError("Dividing by zero is not allowed ! \n")
-
+        #calculating the loss
         _LEFT = (n_left/total) * self.Gini(YLEFT)
         _RIGHT = (n_right/total) * self.Gini(YRIGHT)
     
