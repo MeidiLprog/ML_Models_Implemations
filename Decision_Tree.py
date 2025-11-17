@@ -7,10 +7,6 @@ from pandas.api.types import is_string_dtype, is_numeric_dtype
 # gini + tropy shall be used here
 
 
-
-
-
-
 class Node:
     def __init__(self):
         self.feature = None
@@ -27,7 +23,6 @@ class Tree:
         else:
             self.criterion = criterion
         
-        self.build_tree() = None
         self.root = None
 
     def fit(self,X,y):
@@ -64,6 +59,9 @@ class Tree:
     
         return _LEFT + _RIGHT
 
+
+    def build_tree(self,X,y):
+        pass
 
     def build_tree(X,y):
         pass
