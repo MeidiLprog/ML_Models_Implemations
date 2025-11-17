@@ -34,9 +34,35 @@ class Tree:
         self.root = self.build_tree(X,y)
 
     def Gini(self,y):
-
+        #left_plus_right_total was used to theoritically getting the classes, but I dont need it actually
         left_plus_right_total, total = np.unique(y, return_counts=True)
+        parts : list = []
+        #I divide each proporition by the total
+        for i in total:
+            parts.append((i)/(len(y)))
+
+        #appplying the square 
+        sum_sq = 0
+        for j in range(len(parts)):
+            sum_sq += (parts[j])**2
+
+        #return Gini
+        return 1 - sum_sq
         
+
+    def Loss(self,YLEFT,YRIGHT):
+        n_left = len(YLEFT)
+        n_right = len(YRIGHT)
+        
+        total = int(n_left) + int(n_right)
+        if total == 0:
+            raise ValueError("Dividing by zero is not allowed ! \n")
+
+        _LEFT = (n_left/total) * self.Gini(YLEFT)
+        _RIGHT = (n_right/total) * self.Gini(YRIGHT)
+    
+        return _LEFT + _RIGHT
+
 
     def build_tree(X,y):
         pass
