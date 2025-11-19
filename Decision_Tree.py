@@ -80,11 +80,35 @@ class Tree:
     def build_tree(self,X,y):
         
         if len(np.unique(y)) == 1:
+            #I return a single class
             return Node(class_=y[0])
         
+        #retrieve our feature, and th
+        var_to_choose, th_to_choose = self.best_split(X,y)
+        if var_to_choose is None:
+            classes, counts = np.unique(y,return_counts=True)
+            return Node(class_=classes[np.argmax(counts)])
 
+        #retrieve the name
+        chosen_var = X[:,var_to_choose]
 
-        return 
+        #check whether it's a categorial variable or a quantitative variable
+        if self.isQuality(chosen_var) == True:
+            l_in = (chosen_var == th_to_choose)
+            l_right = (chosen_var != th_to_choose)
+        else:
+            l_in = (chosen_var <= th_to_choose)
+            l_right = (chosen_var > th_to_choose)
+            
+        
+        X_L,y_L = X[l_in], y[l_in]
+        X_R,y_R = X[l_right], y[l_right]
+
+        node_l = self.build_tree(X_L,y_L)
+        node_r = self.build_tree(X_R,y_R)
+
+        inode = Node(feature=var_to_choose,threshold=th_to_choose,left=node_l,right=node_r)
+        return inode
     #difficult function to implement first case before going to sleep: Categorial variables
     def best_split(self,X,y):
         observations,variables = X.shape
