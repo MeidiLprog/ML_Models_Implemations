@@ -158,11 +158,21 @@ class Tree:
                         
         return max_feature,max_threshold
 
+
+    def predict_one(self,X,node : Node):
+
+        if node is None:
+            node = self.root
+        
+        if node.class_ is not None:
+            return node.class_
+        
+        
+        
+
     def Predict(self,X):
         pass
 
-    def predict_one(self):
-        pass
 
     def isQuality(self,column):
         if column.dtype == object or column.dtype.name == "category" or column.nuinique() < 10:
