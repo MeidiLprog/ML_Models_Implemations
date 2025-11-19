@@ -8,12 +8,12 @@ from pandas.api.types import is_string_dtype, is_numeric_dtype
 
 
 class Node:
-    def __init__(self):
-        self.feature = None
-        self.threshold = None
-        self.left = None
-        self.right = None
-        self.class_ = None
+    def __init__(self,feature = None,threshold = None,left = None,right = None,class_ = None):
+        self.feature = feature
+        self.threshold = threshold
+        self.left = left
+        self.right = right
+        self.class_ = class_
         
 class Tree:
     def __init__(self,criterion="gini"):
@@ -79,6 +79,8 @@ class Tree:
 
     def build_tree(self,X,y):
         
+        if len(np.unique(y)) == 1:
+            return Node(class_=y[0])
         
 
 
