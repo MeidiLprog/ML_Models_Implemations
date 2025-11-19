@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from pandas.api.types import is_string_dtype, is_numeric_dtype
+import time as t
 
 #Implementation of a decision tree using CART
 # gini + tropy shall be used here
@@ -17,9 +18,9 @@ class Node:
         
 class Tree:
     def __init__(self,criterion="gini"):
-        if str(criterion).lower() not in ["gini","entropy"]:
-
-            self.criterion = criterion
+        criterion = str(criterion).lower() 
+        if criterion not in ["gini","entropy"]:
+            raise ValueError("Not gini nor entropy \n")
         else:
             self.criterion = criterion
         
@@ -100,9 +101,13 @@ class Tree:
             l_in = (chosen_var <= th_to_choose)
             l_right = (chosen_var > th_to_choose)
             
-        
         X_L,y_L = X[l_in], y[l_in]
         X_R,y_R = X[l_right], y[l_right]
+
+        #check whether we are in a leaf
+        if X_L.shape[0] == 0 or X_R.shape[0] == 0:
+            classes, counts = np.unique(y, return_counts=True)
+            return Node(class_=classes[np.argmax(counts)])
 
         node_l = self.build_tree(X_L,y_L)
         node_r = self.build_tree(X_R,y_R)
@@ -128,29 +133,29 @@ class Tree:
 
                 #we calculate our threshold for a single quantitative variable
 
-                threshold = self.th_calculator(column)
-                for value in threshold:
-                        
-                        LEFT_INDEX = (column <= value)
-                        RIGHT_INDEX = (column > value)
-                        if LEFT_INDEX.sum() == 0 or RIGHT_INDEX.sum() == 0: continue
-                        loss_value = self.loss(y[LEFT_INDEX],y[RIGHT_INDEX])
-                        if loss_value < best_loss_value:
-                            best_loss_value = loss_value
-                            max_feature = j
-                            max_threshold = value
+                thresholds = self.th_calculator(column)
+                for value in thresholds:
+                    LEFT_INDEX = (column <= value)
+                    RIGHT_INDEX = (column > value)
+                    if LEFT_INDEX.sum() == 0 or RIGHT_INDEX.sum() == 0:
+                        continue
+                    loss_value = self.Loss(y[LEFT_INDEX],y[RIGHT_INDEX])
+
+                    if loss_value < best_loss_value:
+                        best_loss_value = loss_value
+                        max_feature = j
+                        max_threshold = value   
             
             #case of a categorial variable
             else: 
                 cat_var = np.unique(column)
                 for c in cat_var:
-                    
-
+    
                     left_c = (column == c)
                     right_c = (column != c)
 
                     if left_c.sum() == 0 or right_c.sum() == 0: continue
-                    loss_cat = self.loss(y[left_c],y[right_c])
+                    loss_cat = self.Loss(y[left_c],y[right_c])
                     if loss_cat < best_loss_value:
                         best_loss_value = loss_cat
                         max_feature = j
@@ -168,8 +173,8 @@ class Tree:
             return node.class_
         
         val = X[node.feature]
-
-        if self.isQuality(val) == True:
+        #check first for categorial values before else, else is used for quantitative values
+        if isinstance(node.threshold,str):
             if val == node.threshold:
                 return self.predict_one(X,node.left)
             else:
@@ -177,19 +182,24 @@ class Tree:
         else:
             if val <= node.threshold:
                 return self.predict_one(X,node.left)
-            elif val > node.threshold:
+            else:
                 return self.predict_one(X,node.right)
 
-    def Predict(self,X):
-        pass
+    def predict(self,X):
+        predictions = [self.predict_one(i,None) for i in X]
+
+        return predictions
 
 
     def isQuality(self,column):
-        if column.dtype == object or column.dtype.name == "category" or column.nuinique() < 10:
+        if column.dtype == object or isinstance(column[0], str):
             return True
         else:
             return False
 
+
+if __name__ == "__main__":
+    pass
 
 
     
