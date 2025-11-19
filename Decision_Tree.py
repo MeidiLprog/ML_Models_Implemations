@@ -59,15 +59,78 @@ class Tree:
     
         return _LEFT + _RIGHT
 
+    #in this function, I calculate my thresholds to perform my splitting based on the loss result later on
+    def th_calculator(self,element_j : int):
+        #I retrieve a column and sort out the values
+        val = sorted(set(element_j))
+        results = []
+
+        if len(val) <= 1:
+            return []
+        else:
+            for i in range(len(val) - 1 ):
+                a = val[i]
+                b = val[i+1]
+                res = (a+b)/2
+                results.append(res)
+
+        return results
+
 
     def build_tree(self,X,y):
-        pass
+        
+        
 
-    def build_tree(X,y):
-        pass
 
-    def best_split(self):
-        pass
+        return 
+    #difficult function to implement first case before going to sleep: Categorial variables
+    def best_split(self,X,y):
+        observations,variables = X.shape
+        if observations == 0 or variables == 0:
+            raise ValueError("neither rows nor columns are to be empty\n")
+        
+        max_feature = None
+        threshold = None
+        max_threshold = None
+        best_loss_value = np.inf
+        
+
+        for j in range(variables):
+            column = X[:,j]
+
+            if self.isQuality(column) == False:
+
+                #we calculate our threshold for a single quantitative variable
+
+                threshold = self.th_calculator(column)
+                for value in threshold:
+                        
+                        LEFT_INDEX = (column <= value)
+                        RIGHT_INDEX = (column > value)
+                        if LEFT_INDEX.sum() == 0 or RIGHT_INDEX.sum() == 0: continue
+                        loss_value = self.loss(y[LEFT_INDEX],y[RIGHT_INDEX])
+                        if loss_value < best_loss_value:
+                            best_loss_value = loss_value
+                            max_feature = j
+                            max_threshold = value
+            
+            #case of a categorial variable
+            else: 
+                cat_var = np.unique(column)
+                for c in cat_var:
+                    
+
+                    left_c = (column == c)
+                    right_c = (column != c)
+
+                    if left_c.sum() == 0 or right_c.sum() == 0: continue
+                    loss_cat = self.loss(y[left_c],y[right_c])
+                    if loss_cat < best_loss_value:
+                        best_loss_value = loss_cat
+                        max_feature = j
+                        max_threshold = c
+                        
+        return max_feature,max_threshold
 
     def Predict(self,X):
         pass
