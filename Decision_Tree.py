@@ -167,8 +167,18 @@ class Tree:
         if node.class_ is not None:
             return node.class_
         
-        
-        
+        val = X[node.feature]
+
+        if self.isQuality(val) == True:
+            if val == node.threshold:
+                return self.predict_one(val,node.left)
+            else:
+                return self.predict_one(val,node.right)
+        else:
+            if val <= node.threshold:
+                return self.predict_one(val,node.left)
+            elif val > node.threshold:
+                return self.predict_one(val,node.right)
 
     def Predict(self,X):
         pass
