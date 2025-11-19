@@ -171,14 +171,14 @@ class Tree:
 
         if self.isQuality(val) == True:
             if val == node.threshold:
-                return self.predict_one(val,node.left)
+                return self.predict_one(X,node.left)
             else:
-                return self.predict_one(val,node.right)
+                return self.predict_one(X,node.right)
         else:
             if val <= node.threshold:
-                return self.predict_one(val,node.left)
+                return self.predict_one(X,node.left)
             elif val > node.threshold:
-                return self.predict_one(val,node.right)
+                return self.predict_one(X,node.right)
 
     def Predict(self,X):
         pass
