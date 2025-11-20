@@ -186,7 +186,7 @@ class Tree:
                 return self.predict_one(X,node.right)
 
     def predict(self,X):
-        predictions = [self.predict_one(i,None) for i in X]
+        predictions = [int(self.predict_one(i,None)) for i in X] #I go through the whole matrix and convert the result in an int, as predict_one return a numpy array
 
         return predictions
 
@@ -199,7 +199,23 @@ class Tree:
 
 
 if __name__ == "__main__":
-    pass
+    X = np.array([
+            [1.0, "Red"],
+            [2.0, "Red"],
+            [2.5, "Blue"],
+            [3.0, "Blue"],
+            [3.5, "Red"],
+            [1.2, "Blue"],
+            [2.2, "Red"],
+            [2.8, "Blue"]
+        ], dtype=object)
+
+    y = np.array([0,0,1,1,0,1,0,1])
+    tree = Tree(criterion="gini")
+    tree.fit(X, y)
+    print("Prediction arbre:", tree.predict(X))
+    
+       
 
 
     
