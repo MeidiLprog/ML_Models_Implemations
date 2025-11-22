@@ -15,7 +15,7 @@ class RandomForest:
         if criterion.lower() not in ["gini","entropy"]:
             raise ValueError("Only gini and entropy are available")
         
-        self.n_estimator = n_estimators
+        self.n_estimators = n_estimators
         self.criterion = criterion
         self.trees = []
 
@@ -28,7 +28,7 @@ class RandomForest:
         size_of_sample = len(X)
         
         i = 0
-        while i < self.n_estimator:
+        while i < self.n_estimators:
             samp = np.random.choice(size_of_sample,size=size_of_sample,replace=True)
             
             #random samples for n lines, and p variables
@@ -47,3 +47,34 @@ class RandomForest:
             values, counts = np.unique(train[:,i],return_counts=True) #for each individuals return the number of unique classes and also theirs counts, ex: [0,1] counts = [14,31]
             final_aggr.append(values[np.argmax(counts)]) # return the index of the highest count, therefore, the class majority
         return np.array(final_aggr) #return the final list of the predictions
+
+
+
+
+
+import sklearn
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score,precision_score,accuracy_score,recall_score,confusion_matrix
+
+
+if __name__ == "__main__":
+    iris =  load_iris()
+    
+    X = iris.data.astype(object) # my decision tree uses comparaisons
+    y = iris.target
+
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+
+    rf = RandomForest(n_estimators=500,criterion="gini")
+
+    rf.fit(X_train,y_train)
+    y_pred = rf.predict(X_test)
+
+    print(f"Accuracy : {accuracy_score(y_test, y_pred)}\n")
+    print(f"Precision : {precision_score(y_test, y_pred, average='macro')}\n")
+    print(f"Recall : {recall_score(y_test, y_pred, average='macro')}\n")
+    print(f"F1 score : {f1_score(y_test, y_pred, average='macro')}\n")
+    print(f"Confusion Matrix :\n{confusion_matrix(y_test, y_pred)}\n")
+
+
