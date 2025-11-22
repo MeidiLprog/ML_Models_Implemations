@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
     X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=42)
 
-    rf = RandomForest(n_estimators=300,criterion="gini")
+    rf = RandomForest(n_estimators=5,criterion="gini")
 
     rf.fit(X_train,y_train)
     y_pred = rf.predict(X_test)
@@ -83,3 +83,21 @@ if __name__ == "__main__":
 
 
 #ADDING LATER PRECISION_CURVE to be able to measure how convergent is our algorithm
+n_trees_list = [1, 5, 10, 15, 30, 50, 75, 100, 150]
+accuracies = []
+
+for n in n_trees_list:
+    rf = RandomForest(n_estimators=n, criterion="gini")
+    rf.fit(X_train, y_train)
+    y_pred = rf.predict(X_test)
+    acc = accuracy_score(y_test, y_pred)
+    accuracies.append(acc)
+    print(f"{n} tree -> accuracy = {acc:.3f}")
+
+plt.figure(figsize=(8,5))
+plt.plot(n_trees_list, accuracies, marker='o', color='green')
+plt.xlabel("Nb trees")
+plt.ylabel("(Accuracy)")
+plt.title("Random forest convergence")
+plt.grid(True)
+plt.show()
