@@ -18,3 +18,29 @@ class RandomForest:
         self.n_estimator = n_estimators
         self.criterion = criterion
         self.trees = []
+
+
+    def fit(self,X,y):
+        
+        trees_to_store = []
+        #Since we are using a bootstrap approach to train our forest, we are to use random samplings, therefore np.random.choice
+
+        size_of_sample = len(X)
+        
+        i = 0
+        while i < self.n_estimator:
+            samp = np.random.choice(size_of_sample,size=size_of_sample,replace=True)
+            
+            #random samples for n lines, and p variables
+            X_samp = X[samp]
+            y_samp = y[samp]
+            tree_built = Decision_Tree.Tree(criterion=self.criterion)
+            tree_built.fit(X_samp,y_samp)
+            trees_to_store.append(tree_built)
+            i += 1
+        self.trees = trees_to_store
+
+    
+
+    def predict(self,X):
+        pass
