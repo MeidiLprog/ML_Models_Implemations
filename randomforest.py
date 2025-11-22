@@ -21,7 +21,7 @@ class RandomForest:
 
 
     def fit(self,X,y):
-        
+
         trees_to_store = []
         #Since we are using a bootstrap approach to train our forest, we are to use random samplings, therefore np.random.choice
 
@@ -40,7 +40,10 @@ class RandomForest:
             i += 1
         self.trees = trees_to_store
 
-    
-
     def predict(self,X):
-        pass
+        final_aggr = []
+        train = np.array([tree_pred.predict(X) for tree_pred in self.trees]) # each tree trained
+        for i in range(X.shape[0]): #for each individual
+            values, counts = np.unique(train[:,i],return_counts=True) #for each individuals return the number of unique classes and also theirs counts, ex: [0,1] counts = [14,31]
+            final_aggr.append(values[np.argmax(counts)]) # return the index of the highest count, therefore, the class majority
+        return np.array(final_aggr) #return the final list of the predictions
