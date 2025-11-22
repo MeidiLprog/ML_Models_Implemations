@@ -26,7 +26,8 @@ class RandomForest:
         #Since we are using a bootstrap approach to train our forest, we are to use random samplings, therefore np.random.choice
 
         size_of_sample = len(X)
-        
+        variables = X.shape[1] #this variable is made as we're going to apply the feature bagging approach to optimize our trees
+
         i = 0
         while i < self.n_estimators:
             samp = np.random.choice(size_of_sample,size=size_of_sample,replace=True)
@@ -34,15 +35,18 @@ class RandomForest:
             #random samples for n lines, and p variables
             X_samp = X[samp]
             y_samp = y[samp]
+
+            sub_variables = np.random.choice(np.arange(variables),size=int(np.sqrt(variables)),replace=False)
+            X_samp = X_samp[:,sub_variables]
             tree_built = Decision_Tree.Tree(criterion=self.criterion)
             tree_built.fit(X_samp,y_samp)
-            trees_to_store.append(tree_built)
+            trees_to_store.append((tree_built,sub_variables))
             i += 1
-        self.trees = trees_to_store
+        self.trees = trees_to_store 
 
     def predict(self,X):
         final_aggr = []
-        train = np.array([tree_pred.predict(X) for tree_pred in self.trees]) # each tree trained
+        train = np.array([tree_pred.predict(X[:,features]) for tree_pred,features in self.trees]) # each tree trained
         for i in range(X.shape[0]): #for each individual
             values, counts = np.unique(train[:,i],return_counts=True) #for each individuals return the number of unique classes and also theirs counts, ex: [0,1] counts = [14,31]
             final_aggr.append(values[np.argmax(counts)]) # return the index of the highest count, therefore, the class majority
@@ -66,7 +70,7 @@ if __name__ == "__main__":
 
     X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=42)
 
-    rf = RandomForest(n_estimators=500,criterion="gini")
+    rf = RandomForest(n_estimators=300,criterion="gini")
 
     rf.fit(X_train,y_train)
     y_pred = rf.predict(X_test)
