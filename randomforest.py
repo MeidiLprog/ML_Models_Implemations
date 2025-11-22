@@ -82,3 +82,4 @@ if __name__ == "__main__":
     print(f"Confusion Matrix :\n{confusion_matrix(y_test, y_pred)}\n")
 
 
+#ADDING LATER PRECISION_CURVE to be able to measure how convergent is our algorithm
