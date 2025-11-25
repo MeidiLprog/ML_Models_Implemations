@@ -2,7 +2,7 @@
 
 import CVXPY    
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
 
 
 class SVM:
@@ -15,7 +15,15 @@ class SVM:
             raise ValueError("C must be an int or a float")
 
         self.kernel = kernel
-        self.C = C
+        if kernel == "rbf":
+            self.C = np.inf
+        if kernel == "linear":
+            self.C = 0.025
 
-         
+    def fit(self,X,y):
+        pass
+
+    def predict(self,X):
+        pass
+
 
