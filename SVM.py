@@ -58,7 +58,7 @@ class SVM:
 
         #now we buil the function to maximize
 
-        z = 
+        z = cp.Maximize()
 
         return
 
