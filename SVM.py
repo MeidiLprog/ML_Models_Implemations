@@ -1,6 +1,6 @@
 #IMPLEMENTATION OF SVM
-
-import CVXPY    
+ 
+import CVXPY as cp
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -33,13 +33,13 @@ class SVM:
         if ker_nel == 0: 
             for i in range(len(X)):
                 for j in range(len(X)):
-                    self.K_function = X[i] @ X[j]
+                    self.K_function[i,j] = X[i] @ X[j]
         else:
             for i in range(len(X)):
                 for j in range(len(X)):
-                    
+                    pass
 
-        return
+        return self.K_function
 
     def fit(self,X,y):
         if len(X) == 0 or len(y) == 0:
@@ -52,7 +52,13 @@ class SVM:
         print(f"{obs} available\n")
         print(f"{variables} available\n")
         
+        #we build our alpha as it is what we are looking for
 
+        alpha = cp.Variable(obs)
+
+        #now we buil the function to maximize
+
+        z = 
 
         return
 
