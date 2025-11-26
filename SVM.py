@@ -116,7 +116,7 @@ class SVM:
             if self.kernel == "linear":
                 res = np.sum(self.alpha * self.y * (self.X @ X[i]))
             else:
-                K = np.exp(-self.gamma * np.linalg.norm(self.X - X[i])**2)
+                K = np.exp(-self.gamma * np.linalg.norm(self.X - X[i],axis=1)**2) #axis 1 means I calculate the norme between each points not the WHOLE matrix
                 res = np.sum(self.alpha* self.y * K)
             predictions[i] = np.sign(res) # +1 or -1 based on whether f(x) > 0 or < 0
 
