@@ -116,8 +116,8 @@ class SVM:
             if self.kernel == "linear":
                 res = np.sum(self.alpha * self.y * (self.X @ X[i]))
             else:
-                K = np.exp(-self.alpha * np.linalg.norm(self.X - X[i])**2)
-                res = np.sum(self.gamma* self.y * K)
+                K = np.exp(-self.gamma * np.linalg.norm(self.X - X[i])**2)
+                res = np.sum(self.alpha* self.y * K)
             predictions[i] = np.sign(res) # +1 or -1 based on whether f(x) > 0 or < 0
 
         return predictions
