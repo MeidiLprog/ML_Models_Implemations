@@ -87,7 +87,7 @@ class SVM:
         #we add our constraints sum alpha*i *yi == 0 and we limit C to indicate whether or not we penalize our constraints
         constraints = [cp.sum(cp.multiply(alpha,y)) == 0, alpha >= 0, alpha <= self.C]
 
-  
+
         prob = cp.Problem(z, constraints)
         prob.solve(solver=cp.SCS, verbose=True)
 
@@ -99,13 +99,25 @@ class SVM:
     #here we use our function "sign" to predict the class if f(x) > 0 : +1 else -1
     def predict(self,X):
         #predict the class of the observation
-        n = X.shape[0]
-
+        if not isinstance(X,np.ndarray):
+            raise TypeError("X must be a numpy ndarray")
+        if X.ndim != 2:
+            raise ValueError("X must be a 2d matrix")
+        if X.size == 0:
+            raise ValueError("X cannot be an empty matrix, doesnt make any sense !")
         
+        n = X.shape[0]
+        predictions = np.zeros(n)
 
-        fx 
+        for i in range(n):
+            if self.kernel == "linear":
+                res = np.sum(self.alpha * self.y * (self.X @ X[i]))
+            else:
+                K = np.exp(-self.alpha * np.linalg.norm(self.X - X[i])**2)
+                res = np.sum(self.alpha * self.y * K)
+            predictions[i] = np.sign(res) # +1 or -1 based on whether f(x) > 0 or < 0
 
-        return np.sign(fx)
+        return predictions
 
 
 
