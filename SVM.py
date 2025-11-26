@@ -28,12 +28,22 @@ class SVM:
         self.y = None
         self.K_function = None
 
-    def kernel_calculation(self,X : np.matrix):
-        #we are to pick what kind of kernel we use
+    def kernel_calculation(self,X : np.ndarray):
+        #we are to pick what kind of kernel we use, however we first need to check out a few prerequisites
+        if not isinstance(X,np.ndarray):
+            raise TypeError("X must be a numpy ndarray")
+        if X.dim != 2:
+            raise ValueError("X must be a 2d matrix")
+        if X.size == 0:
+            raise ValueError("X cannot be an empty matrix, doesnt make any sense !")
+        
         n = len(X)
         Ker = np.zeros((n,n))
-      
-        gamma = 1/(2* np.var(X))
+        VARX = np.var(X)
+        if VARX == 0:
+            raise ValueError("Var cannot equate 0 \n")
+        
+        gamma = 1/(2* VARX)
         for i in range(len(X)):
             for j in range(len(X)):
                 if self.kernel == "linear":
@@ -86,10 +96,16 @@ class SVM:
         self.alpha = alpha.value
         return self.alpha
 
-
+    #here we use our function "sign" to predict the class if f(x) > 0 : +1 else -1
     def predict(self,X):
-        pass
+        #predict the class of the observation
+        n = X.shape[0]
+
         
+
+        fx 
+
+        return np.sign(fx)
 
 
 
