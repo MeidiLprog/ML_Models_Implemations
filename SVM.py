@@ -24,9 +24,11 @@ class SVM:
             self.C = float(C)
 
         self.alpha = None
+        self.gamma = None
         self.X = None
         self.y = None
         self.K_function = None
+
 
     def kernel_calculation(self,X : np.ndarray):
         #we are to pick what kind of kernel we use, however we first need to check out a few prerequisites
@@ -44,6 +46,7 @@ class SVM:
             raise ValueError("Var cannot equate 0 \n")
         
         gamma = 1/(2* VARX)
+        self.gamma = gamma
         for i in range(len(X)):
             for j in range(len(X)):
                 if self.kernel == "linear":
@@ -114,7 +117,7 @@ class SVM:
                 res = np.sum(self.alpha * self.y * (self.X @ X[i]))
             else:
                 K = np.exp(-self.alpha * np.linalg.norm(self.X - X[i])**2)
-                res = np.sum(self.alpha * self.y * K)
+                res = np.sum(self.gamma* self.y * K)
             predictions[i] = np.sign(res) # +1 or -1 based on whether f(x) > 0 or < 0
 
         return predictions
