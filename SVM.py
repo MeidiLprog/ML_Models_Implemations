@@ -30,6 +30,7 @@ class SVM:
 
     def kernel_calculation(self,X : np.matrix,ker_nel = 0):
         #we are to pick what kind of kernel we use
+        gamma = 1/(2*np.var(X))
         if ker_nel == 0: 
             for i in range(len(X)):
                 for j in range(len(X)):
@@ -37,7 +38,7 @@ class SVM:
         else:
             for i in range(len(X)):
                 for j in range(len(X)):
-                    pass
+                    self.K_function[i,j] = np.exp( -gamma * (np.linalg.norm(X[i] - X[j]**2)) )
 
         return self.K_function
 
@@ -48,7 +49,6 @@ class SVM:
         self.y = y 
         obs,variables = X.Shape
         matrix = self.zeros(obs,obs)
-        self.kernel_calculation(matrix,ker_nel=1)
         print(f"{obs} available\n")
         print(f"{variables} available\n")
         
@@ -58,7 +58,19 @@ class SVM:
 
         #now we buil the function to maximize
 
-        z = cp.Maximize()
+        K = self.kernel_calculation(matrix,ker_nel=1)
+        z = cp.Maximize(np.sum(alpha) + cp.quad_form(cp.multiply(y,alpha),K))
+        
+        #we add our constraints sum alpha*i *yi == 0 and we limit C to indicate whether or not we penalize our constraints
+        constraints = [alpha @ y == 0, alpha >= 0 and alpha <= self.C]
+
+
+        prob = cp.Problem(z,constraints)
+        prob.solve()
+
+        print(f" dual variable {constraints[0].dual_value} \n")
+        print(f" dual variable {constraints[1].dual_value} \n")
+        print(f"Value: {constraints.value} \n")
 
         return
 
