@@ -32,7 +32,7 @@ class SVM:
         #we are to pick what kind of kernel we use, however we first need to check out a few prerequisites
         if not isinstance(X,np.ndarray):
             raise TypeError("X must be a numpy ndarray")
-        if X.dim != 2:
+        if X.ndim != 2:
             raise ValueError("X must be a 2d matrix")
         if X.size == 0:
             raise ValueError("X cannot be an empty matrix, doesnt make any sense !")
