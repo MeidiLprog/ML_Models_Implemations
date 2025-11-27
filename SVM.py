@@ -137,31 +137,32 @@ if __name__ == '__main__':
     try:
         for i,(X,y) in enumerate(datasets):
             y = np.where(y == 0, -1, 1)
-    except ValueError: print("An error occured ! \n")
-
-    for kernel in ["rbf","linear"]:
-        model = SVM(kernel=kernel,C=0.025)
-        model.fit(X,y)
-
-    x_min, x_max = X[:,0].min() -1 , X[:,0].max() + 1
-    y_min, y_max = X[:,1].min() -1, X[:,1].max() +1
-
-    x_mat, y_mat = np.meshgrid(
-        np.linspace(x_min,x_max,300),
-        np.linspace(y_min,y_max,300)
-    )
-    print(f"Dimension of x_mat {x_mat.ndim}\n")
-    print(f"Dimension of y_mat {y_mat.ndim}\n")
-
-    Z = model.predict(np.c_[x_mat.ravel(),y_mat.ravel()]) #we use ravel to flatten our matrix here, then we use np.c_ so we get both of our vectors next to each others
-    print(f"Dimension of Z {Z.ndim}\n")
 
 
-    Z = Z.reshape(x_mat.shape)
-    plt.figure(figsize=(6,12))
-    plt.contourf(x_mat,y_mat,Z,c=y,cmap=plt.cm.coolwarm, alpha=0.6)
-    plt.scatter(X[:,0],X[:,1],c=y,cmap=plt.cm.coolwarm,alpha=0.6)
-    plt.title("SVM representation", fontsize=12)
-    plt.xlabel("x1", fontsize=12)
-    plt.ylabel("x2",fontsize=12)
-    plt.show()
+            for kernel in ["rbf","linear"]:
+                model = SVM(kernel=kernel,C=0.025)
+                model.fit(X,y)
+
+                x_min, x_max = X[:,0].min() -1 , X[:,0].max() + 1
+                y_min, y_max = X[:,1].min() -1, X[:,1].max() +1
+
+                x_mat, y_mat = np.meshgrid(
+                    np.linspace(x_min,x_max,300),
+                    np.linspace(y_min,y_max,300)
+                )
+                print(f"Dimension of x_mat {x_mat.ndim}\n")
+                print(f"Dimension of y_mat {y_mat.ndim}\n")
+
+                Z = model.predict(np.c_[x_mat.ravel(),y_mat.ravel()]) #we use ravel to flatten our matrix here, then we use np.c_ so we get both of our vectors next to each others
+                print(f"Dimension of Z {Z.ndim}\n")
+
+
+                Z = Z.reshape(x_mat.shape)
+                plt.figure(figsize=(6,12))
+                plt.contourf(x_mat,y_mat,Z,c=y,cmap=plt.cm.coolwarm, alpha=0.6)
+                plt.scatter(X[:,0],X[:,1],c=y,cmap=plt.cm.coolwarm,alpha=0.6)
+                plt.title(f"Dataset:{i}, kernel: {kernel}", fontsize=12)
+                plt.xlabel("x1", fontsize=12)
+                plt.ylabel("x2",fontsize=12)
+                plt.show()
+    except ValueError: print("An error occured during the test!\n")
