@@ -109,10 +109,10 @@ class SVM:
         if X.size == 0:
             raise ValueError("X cannot be an empty matrix, doesnt make any sense !")
         
-        n = X.shape[0]
-        predictions = np.zeros(n)
+        
+        predictions = np.zeros(X.shape[0])
 
-        for i in range(n):
+        for i in range(X.shape[0]):
             if self.kernel == "linear":
                 res = np.sum(self.alpha * self.y * (self.X @ X[i]))
             else:
@@ -131,6 +131,14 @@ from sklearn.metrics import f1_score, precision_score, accuracy_score
 
 
 if __name__ == '__main__':
+
+
+    datasets = [
+    make_moons(noise=0.3, random_state=0),
+    make_circles(noise=0.2, factor=0.5, random_state=1),
+    make_blobs(n_samples=100, centers=2, n_features=2, center_box=(0, 20), random_state=0)
+    ]
+
     load = load_iris()
     df = pd.DataFrame(data=load.data,columns=load.feature_names)
     df.describe()
