@@ -122,11 +122,12 @@ class SVM:
 
         return predictions
 
+from sklearn.datasets import make_moons, make_circles, make_blobs
 
 
 if __name__ == '__main__':
 
-
+    
     datasets = [
     make_moons(noise=0.3, random_state=0),
     make_circles(noise=0.2, factor=0.5, random_state=1),
@@ -147,12 +148,18 @@ if __name__ == '__main__':
 
     x_mat, y_mat = np.meshgrid(
         np.linspace(x_min,x_max,300),
-        np.linspace(x_min,x_max,300)
+        np.linspace(y_min,y_max,300)
     )
+    print(f"Dimension of x_mat {x_mat.ndim}\n")
+    print(f"Dimension of y_mat {y_mat.ndim}\n")
 
     Z = model.predict(np.c_[x_mat.ravel(),y_mat.ravel()]) #we use ravel to flatten our matrix here, then we use np.c_ so we get both of our vectors next to each others
+    print(f"Dimension of Z {Z.ndim}\n")
 
+
+    Z = Z.reshape(x_mat.shape)
     plt.figure(size=(6,12))
+    plt.contourf(x_mat,y_mat,Z,cmap=plt.cm.coolwarm, alpha=0.6)
     plt.scatter(X[:,0],X[:,1],cmap=plt.cm.coolwarm,alpha=0.6)
     plt.title("SVM representation", font=12)
     plt.xlabel("x1", font=12)
