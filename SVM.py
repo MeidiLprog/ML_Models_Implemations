@@ -124,12 +124,6 @@ class SVM:
 
 
 
-
-
-from sklearn.datasets import load_iris
-from sklearn.metrics import f1_score, precision_score, accuracy_score
-
-
 if __name__ == '__main__':
 
 
@@ -138,14 +132,6 @@ if __name__ == '__main__':
     make_circles(noise=0.2, factor=0.5, random_state=1),
     make_blobs(n_samples=100, centers=2, n_features=2, center_box=(0, 20), random_state=0)
     ]
-
-    load = load_iris()
-    df = pd.DataFrame(data=load.data,columns=load.feature_names)
-    df.describe()
-    df.head(5)
-    X = load.data[load.target != 2]
-    y = load.target[load.target != 2]
-    y = np.where(y == 0, -1,1)
 
     model = SVM(kernel="linear",C=1.0)
     try:
