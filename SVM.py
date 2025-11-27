@@ -133,8 +133,28 @@ if __name__ == '__main__':
     make_blobs(n_samples=100, centers=2, n_features=2, center_box=(0, 20), random_state=0)
     ]
 
-    model = SVM(kernel="linear",C=1.0)
     try:
+        for i,(X,y) in enumerate(datasets):
+            y = np.where(y == 0, -1, 1)
+    except ValueError: print("An error occured ! \n")
+
+    for kernel in ["linear","rbf"]:
+        model = SVM(kernel=kernel,C=0.025)
         model.fit(X,y)
-    except ValueError:
-        print("Values passed to the model are not correct \n")
+
+    x_min, x_max = X[:,0].min() -1 , X[:,0].max() + 1
+    y_min, y_max = X[:,1].min() -1, X[:,1].max() +1
+
+    x_mat, y_mat = np.meshgrid(
+        np.linspace(x_min,x_max,300),
+        np.linspace(x_min,x_max,300)
+    )
+
+    Z = model.predict(np.c_[x_mat.ravel(),y_mat.ravel()]) #we use ravel to flatten our matrix here, then we use np.c_ so we get both of our vectors next to each others
+
+    plt.figure(size=(6,12))
+    plt.scatter(X[:,0],X[:,1],cmap=plt.cm.coolwarm,alpha=0.6)
+    plt.title("SVM representation", font=12)
+    plt.xlabel("x1", font=12)
+    plt.ylabel("x2",font=12)
+    plt.show()
