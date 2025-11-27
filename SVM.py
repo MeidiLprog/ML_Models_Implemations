@@ -19,7 +19,7 @@ class SVM:
 
         self.kernel = kernel
         if kernel == "rbf":
-            self.C = np.inf
+            self.C = float(C)
         if kernel == "linear":
             self.C = float(C)
 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
             y = np.where(y == 0, -1, 1)
     except ValueError: print("An error occured ! \n")
 
-    for kernel in ["linear","rbf"]:
+    for kernel in ["rbf","linear"]:
         model = SVM(kernel=kernel,C=0.025)
         model.fit(X,y)
 
@@ -158,10 +158,10 @@ if __name__ == '__main__':
 
 
     Z = Z.reshape(x_mat.shape)
-    plt.figure(size=(6,12))
-    plt.contourf(x_mat,y_mat,Z,cmap=plt.cm.coolwarm, alpha=0.6)
-    plt.scatter(X[:,0],X[:,1],cmap=plt.cm.coolwarm,alpha=0.6)
-    plt.title("SVM representation", font=12)
-    plt.xlabel("x1", font=12)
-    plt.ylabel("x2",font=12)
+    plt.figure(figsize=(6,12))
+    plt.contourf(x_mat,y_mat,Z,c=y,cmap=plt.cm.coolwarm, alpha=0.6)
+    plt.scatter(X[:,0],X[:,1],c=y,cmap=plt.cm.coolwarm,alpha=0.6)
+    plt.title("SVM representation", fontsize=12)
+    plt.xlabel("x1", fontsize=12)
+    plt.ylabel("x2",fontsize=12)
     plt.show()
