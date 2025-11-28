@@ -142,7 +142,7 @@ if __name__ == '__main__':
             for kernel in ["rbf","linear"]:
                 model = SVM(kernel=kernel,C=0.025)
                 model.fit(X,y)
-
+                
                 x_min, x_max = X[:,0].min() -1 , X[:,0].max() + 1
                 y_min, y_max = X[:,1].min() -1, X[:,1].max() +1
 
@@ -160,6 +160,7 @@ if __name__ == '__main__':
                 Z = Z.reshape(x_mat.shape)
                 plt.figure(figsize=(6,12))
                 plt.contourf(x_mat,y_mat,Z,c=y,cmap=plt.cm.coolwarm, alpha=0.6)
+                plt.contour(x_mat, y_mat, Z, levels=[0], colors='black')
                 plt.scatter(X[:,0],X[:,1],c=y,cmap=plt.cm.coolwarm,alpha=0.6)
                 plt.title(f"Dataset:{i}, kernel: {kernel}", fontsize=12)
                 plt.xlabel("x1", fontsize=12)
