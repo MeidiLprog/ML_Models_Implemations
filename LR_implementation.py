@@ -12,6 +12,10 @@ datasets = [
 ]
 
 def sigmoid(z : int):
+    if not isinstance(z,int):
+        raise TypeError("sigmoid retrieves integers")
+    if z < 0:
+        raise ValueError("cannot be less than zero")
     func = 1/(1+ np.exp(-z))
     return func
 
@@ -124,4 +128,5 @@ plt.plot(model.Loss_cost)
 plt.title("Evolution of the loss function")
 plt.xlabel("Iterations")
 plt.ylabel("Loss")
+
 plt.show()
