@@ -2,7 +2,8 @@
 
 import numpy as np
 import pandas as pd
-from sklearn.datasets import make_moons,make_circles,make_blobs
+from sklearn.datasets import make_blobs,make_circles,make_moons
+
 
 datasets = [
     make_moons(noise = 0.3, random_state = 0),
@@ -10,11 +11,36 @@ datasets = [
     make_blobs(n_samples=100, centers=2, n_features=2, center_box=(0, 20), random_state=0)
 ]
 
+
+def drawFunction(model,X,y,title="BOundaries") -> None:
+    xmn,xmx = X[:,0].min() -1 , X[:,1].max() + 1
+    ymn,ymx = X[:,1].min() -1, X[:,1].max() + 1
+
+    x,y = np.meshgrid(np.linspace(xmn,xmx,200), np.linspace(ymn,ymx,200))
+
+    grid = np.c._[x.ravel(),y.ravel()]
+    Z = model.predict(grid)
+    Z = Z.reshape(x.shape)
+    plt.figure(figsize=(8,12))
+    plt.contour(x,y,Z,cmap="bwr",alpha=0.5)
+    plt.scatter(X[:,0],X[:,1],cmap="bwr",edgecolors="k")
+
+
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title(title)
+    plt.show()
+
+
+
+
+    return 
+
+
+
+
+
 def sigmoid(z : int):
-    if not isinstance(z,int):
-        raise TypeError("sigmoid retrieves integers")
-    if z < 0:
-        raise ValueError("cannot be less than zero")
     func = 1/(1+ np.exp(-z))
     return func
 
@@ -111,15 +137,3 @@ model.fit(X,y)
 y_pred = model.predict(X)
 
 
-plt.scatter(X[:,0], X[:,1],c=y_pred,cmap="bwr",alpha=0.7)
-plt.title("Classification using logistic regression")
-plt.show()
-
-#display loss function
-
-plt.plot(model.Loss_cost)
-plt.title("Evolution of the loss function")
-plt.xlabel("Iterations")
-plt.ylabel("Loss")
-
-plt.show()
