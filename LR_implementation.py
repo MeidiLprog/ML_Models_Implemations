@@ -2,7 +2,6 @@
 
 import numpy as np
 import pandas as pd
-import cvxpy as cp
 from sklearn.datasets import make_moons,make_circles,make_blobs
 
 datasets = [
@@ -65,31 +64,25 @@ class LogisticRegression:
         
         elif self.optimize == "newton":
 
+            X = np.hstack([np.ones((X.shape[0],1)),X])
+            beta = np.zeros(X.shape[1])
+
             t = 0
-
             while t < self.iterations:
-
-                # probas
                 p = sigmoid(X @ beta)
-
-                # gradient
                 gradient = X.T @ (p - y)
-
                 W = np.diag(p * (1 - p))
-
                 H = X.T @ W @ X
                 delta = np.linalg.solve(H, gradient)
                 beta = beta - delta
                 self.Loss_cost.append(self.Loss(X, y, beta))
 
-                # arrêt
                 if np.linalg.norm(gradient) < 1e-6:
-                    print("Convergence Newton")
                     break
-
                 t += 1
 
             self.beta = beta
+
 
 
 
