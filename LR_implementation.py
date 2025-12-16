@@ -13,17 +13,20 @@ datasets = [
 
 
 def drawFunction(model,X,y,title="BOundaries") -> None:
-    xmn,xmx = X[:,0].min() -1 , X[:,1].max() + 1
+    xmn, xmx = X[:,0].min() - 1, X[:,0].max() + 1
     ymn,ymx = X[:,1].min() -1, X[:,1].max() + 1
 
-    x,y = np.meshgrid(np.linspace(xmn,xmx,200), np.linspace(ymn,ymx,200))
+    xx,yy = np.meshgrid(np.linspace(xmn,xmx,200), np.linspace(ymn,ymx,200))
 
-    grid = np.c._[x.ravel(),y.ravel()]
+    grid = np.c_[xx.ravel(),yy.ravel()]
     Z = model.predict(grid)
-    Z = Z.reshape(x.shape)
+    Z = Z.reshape(xx.shape)
+
+    y_pred = model.predict(X)
+
     plt.figure(figsize=(8,12))
-    plt.contour(x,y,Z,cmap="bwr",alpha=0.5)
-    plt.scatter(X[:,0],X[:,1],cmap="bwr",edgecolors="k")
+    plt.contour(xx,yy,Z,cmap="bwr",alpha=0.5)
+    plt.scatter(X[:,0],X[:,1],c=y_pred,cmap="bwr",edgecolors="k")
 
 
     plt.xlabel("x")
@@ -130,10 +133,24 @@ import matplotlib.pyplot as plt
 
 X , y = datasets[0]
 
-model = LogisticRegression(optimizer="newton", iterations=200)
+#Trying out gradient's method
+model = LogisticRegression(optimizer="gradient", iterations=200)
 model.fit(X,y)
 
+#Newton's one
+modelnew = LogisticRegression(optimizer="newton", iterations=200)
+modelnew.fit(X,y)
 
-y_pred = model.predict(X)
+drawFunction(model,X,y,title="LR with Gradient")
+plt.plot(range(len(model.Loss_cost)),model.Loss_cost)
+
+
+
+drawFunction(modelnew,X,y,title="LR with Newton")
+plt.plot(range(len(modelnew.Loss_cost)),modelnew.Loss_cost)
+
+
+
+
 
 
