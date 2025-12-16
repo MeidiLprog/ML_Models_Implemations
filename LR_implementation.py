@@ -138,18 +138,21 @@ model = LogisticRegression(optimizer="gradient", iterations=200)
 model.fit(X,y)
 
 #Newton's one
-modelnew = LogisticRegression(optimizer="newton", iterations=200)
+modelnew = LogisticRegression(optimizer="newton", iterations=20) #newton's converging faster so no need to increase the number of iterations
 modelnew.fit(X,y)
 
 drawFunction(model,X,y,title="LR with Gradient")
 plt.plot(range(len(model.Loss_cost)),model.Loss_cost)
-
-
+plt.xlabel("Iterations")
+plt.ylabel("Loss (log scale)")
+plt.show()
 
 drawFunction(modelnew,X,y,title="LR with Newton")
-plt.plot(range(len(modelnew.Loss_cost)),modelnew.Loss_cost)
-
-
+#I took the liberty of using plt.semilogy to obtain a better view of newton's convergence algorithm using a logarithmic scale
+plt.semilogy(range(len(modelnew.Loss_cost)),modelnew.Loss_cost)
+plt.xlabel("Iterations")
+plt.ylabel("Loss (log scale)")
+plt.show()
 
 
 
