@@ -43,7 +43,7 @@ class RandomForest:
             trees_to_store.append((tree_built,sub_variables))
             i += 1
         self.trees = trees_to_store 
-
+        
     def predict(self,X):
         final_aggr = []
         train = np.array([tree_pred.predict(X[:,features]) for tree_pred,features in self.trees]) # each tree trained

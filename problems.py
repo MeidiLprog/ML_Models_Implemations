@@ -48,7 +48,7 @@ print("List of taken objects : ", objc_taken)
 print("Max Value : ", max_value)
 
 
-
+#fusionned list:
 
 
 
