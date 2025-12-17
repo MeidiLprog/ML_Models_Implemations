@@ -7,6 +7,29 @@ import time as t
 #Implementation of a decision tree using CART
 # gini + tropy shall be used here
 
+def drawFunction(model,X,y,title="BOundaries") -> None:
+    xmn, xmx = X[:,0].min() - 1, X[:,0].max() + 1
+    ymn,ymx = X[:,1].min() -1, X[:,1].max() + 1
+
+    xx,yy = np.meshgrid(np.linspace(xmn,xmx,200), np.linspace(ymn,ymx,200))
+
+    grid = np.c_[xx.ravel(),yy.ravel()]
+    Z = np.array(model.predict(grid)).reshape(xx.shape)
+
+
+    y_pred = model.predict(X)
+
+    plt.figure(figsize=(8,12))
+    plt.contour(xx,yy,Z,cmap="bwr",alpha=0.5)
+    plt.scatter(X[:,0],X[:,1],c=y_pred,cmap="bwr",edgecolors="k")
+
+
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title(title)
+    plt.show()
+
+
 
 class Node:
     def __init__(self,feature = None,threshold = None,left = None,right = None,class_ = None):
@@ -207,15 +230,13 @@ datasets = [
 ]
 
 if __name__ == "__main__":
-    X, y = datasets[0] # make_moons
+    X, y = datasets[0]  # make_moons
 
-    tree = Tree(criterion="gini")
-    tree.fit(X, y)
-
-    preds = tree.predict(X)
-    print("Predictions:", preds)
-
-       
-
+    for i in range(len(datasets)):
+        X,y = datasets[i]
+        
+        tree = Tree(criterion="gini")
+        tree.fit(X, y)
+        drawFunction(tree,X,y,title="Decision Tree (CART Gini) on Moons")
 
     
