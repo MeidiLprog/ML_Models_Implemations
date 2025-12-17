@@ -229,14 +229,13 @@ datasets = [
                center_box=(0, 20), random_state=0)
 ]
 
-if __name__ == "__main__":
-    X, y = datasets[0]  # make_moons
+names = ["Moons", "Circles", "Blobs"]
 
+if __name__ == "__main__":
     for i in range(len(datasets)):
-        X,y = datasets[i]
+        X, y = datasets[i]
         
         tree = Tree(criterion="gini")
         tree.fit(X, y)
-        drawFunction(tree,X,y,title="Decision Tree (CART Gini) on Moons")
-
-    
+        
+        drawFunction(tree,X,y,title=f"Decision Tree (CART Gini) on {names[i]}")
