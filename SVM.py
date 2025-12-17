@@ -73,9 +73,10 @@ class SVM:
         #now we buil the function to maximize
 
         K = self.kernel_calculation(X)
-        K = (K + K.T) / 2
+        K = (K + K.T) / 2 
         #here thanks to quad_form we understand the relation between points and weights alpha i and x i
         #but before since I ran into issues with cp I have to check whether K is SPD so check whether the lower lambda is > 0
+        '''
         eigvals = np.linalg.eigvalsh(K)
         print(f"Lowest eigen value {eigvals.min()}\n")
         if eigvals.min() < 0:
@@ -83,7 +84,7 @@ class SVM:
             eig_v, eig_vec = np.linalg.eigh(K)
             eig_v[eig_v < 0] == 0 #now we cheat a little bit to force our matrix to be DSP
             K = eig_vec @ np.diag(eig_v) @ eig_vec.T       
-            
+        '''
         K = cp.psd_wrap(K)
         z = cp.Maximize(cp.sum(alpha) - 0.5 * cp.quad_form(cp.multiply(y,alpha),K))
         
@@ -159,9 +160,10 @@ if __name__ == '__main__':
 
                 Z = Z.reshape(x_mat.shape)
                 plt.figure(figsize=(6,12))
-                plt.contourf(x_mat,y_mat,Z,c=y,cmap=plt.cm.coolwarm, alpha=0.6)
+                plt.contourf(x_mat, y_mat, Z, cmap=plt.cm.coolwarm, alpha=0.6)
                 plt.contour(x_mat, y_mat, Z, levels=[0], colors='black')
-                plt.scatter(X[:,0],X[:,1],c=y,cmap=plt.cm.coolwarm,alpha=0.6)
+                plt.scatter(X[:,0], X[:,1], c=y, cmap=plt.cm.coolwarm, alpha=0.6)
+
                 plt.title(f"Dataset:{i}, kernel: {kernel}", fontsize=12)
                 plt.xlabel("x1", fontsize=12)
                 plt.ylabel("x2",fontsize=12)
