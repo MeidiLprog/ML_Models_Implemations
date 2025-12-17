@@ -60,44 +60,42 @@ import sklearn
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score,precision_score,accuracy_score,recall_score,confusion_matrix
+from sklearn.datasets import make_moons, make_circles, make_blobs
+datasets = [
+    make_moons(noise=0.3, random_state=0),
+    make_circles(noise=0.2, factor=0.5, random_state=1),
+    make_blobs(n_samples=100, centers=2, n_features=2,
+               center_box=(0, 20), random_state=0)
+]
+def drawFunction(model,X,y,title="BOundaries") -> None:
+    xmn, xmx = X[:,0].min() - 1, X[:,0].max() + 1
+    ymn,ymx = X[:,1].min() -1, X[:,1].max() + 1
 
+    xx,yy = np.meshgrid(np.linspace(xmn,xmx,200), np.linspace(ymn,ymx,200))
+
+    grid = np.c_[xx.ravel(),yy.ravel()]
+    Z = np.array(model.predict(grid)).reshape(xx.shape)
+
+
+    y_pred = model.predict(X)
+
+    plt.figure(figsize=(8,12))
+    plt.contour(xx,yy,Z,cmap="bwr",alpha=0.5)
+    plt.scatter(X[:,0],X[:,1],c=y_pred,cmap="bwr",edgecolors="k")
+
+
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title(title)
+    plt.show()
+
+names = ["Moons", "Circles", "Blobs"]
 
 if __name__ == "__main__":
-    iris =  load_iris()
-    
-    X = iris.data.astype(object) # my decision tree uses comparaisons
-    y = iris.target
-
-    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=42)
-
-    rf = RandomForest(n_estimators=5,criterion="gini")
-
-    rf.fit(X_train,y_train)
-    y_pred = rf.predict(X_test)
-
-    print(f"Accuracy : {accuracy_score(y_test, y_pred)}\n")
-    print(f"Precision : {precision_score(y_test, y_pred, average='macro')}\n")
-    print(f"Recall : {recall_score(y_test, y_pred, average='macro')}\n")
-    print(f"F1 score : {f1_score(y_test, y_pred, average='macro')}\n")
-    print(f"Confusion Matrix :\n{confusion_matrix(y_test, y_pred)}\n")
-
-
-#ADDING LATER PRECISION_CURVE to be able to measure how convergent is our algorithm
-n_trees_list = [1, 5, 10, 15, 30, 50, 75, 100, 150]
-accuracies = []
-
-for n in n_trees_list:
-    rf = RandomForest(n_estimators=n, criterion="gini")
-    rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
-    acc = accuracy_score(y_test, y_pred)
-    accuracies.append(acc)
-    print(f"{n} tree -> accuracy = {acc:.3f}")
-
-plt.figure(figsize=(8,5))
-plt.plot(n_trees_list, accuracies, marker='o', color='green')
-plt.xlabel("Nb trees")
-plt.ylabel("(Accuracy)")
-plt.title("Random forest convergence")
-plt.grid(True)
-plt.show()
+    for i in range(len(datasets)):
+        X, y = datasets[i]
+        
+        rf = RandomForest(n_estimators=30, criterion="gini")
+        rf.fit(X, y)
+        
+        drawFunction(rf,X,y,title=f"Random Forest (Gini) on {names[i]}")
