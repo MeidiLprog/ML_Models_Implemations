@@ -198,23 +198,23 @@ class Tree:
             return False
 
 
-if __name__ == "__main__":
-    X = np.array([
-            [1.0, "Red"],
-            [2.0, "Red"],
-            [2.5, "Blue"],
-            [3.0, "Blue"],
-            [3.5, "Red"],
-            [1.2, "Blue"],
-            [2.2, "Red"],
-            [2.8, "Blue"]
-        ], dtype=object)
+from sklearn.datasets import make_moons, make_circles, make_blobs
+datasets = [
+    make_moons(noise=0.3, random_state=0),
+    make_circles(noise=0.2, factor=0.5, random_state=1),
+    make_blobs(n_samples=100, centers=2, n_features=2,
+               center_box=(0, 20), random_state=0)
+]
 
-    y = np.array([0,0,1,1,0,1,0,1])
+if __name__ == "__main__":
+    X, y = datasets[0] # make_moons
+
     tree = Tree(criterion="gini")
     tree.fit(X, y)
-    print("Prediction arbre:", tree.predict(X))
-    
+
+    preds = tree.predict(X)
+    print("Predictions:", preds)
+
        
 
 
