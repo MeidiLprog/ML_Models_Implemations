@@ -67,20 +67,44 @@ class Tree:
 
         #return Gini
         return 1 - sum_sq
+
+    def Entropy(self, y):
+        left_plus_right_total, total = np.unique(y, return_counts=True)
+        parts = []
+
+        for i in total:
+            parts.append(i / len(y))
+
+        entropy = 0
+        for p in parts:
+            if p > 0:
+                entropy += -p * np.log2(p)
+
+        return entropy
+
+
+
         
     #Important to remember, the loss is a a function to minimise
-    def Loss(self,YLEFT,YRIGHT):
-        #when split I need to retrieve nb_observations from left and right side in the node ex nb yes and nb_ no
+    # Important to remember, the loss is a function to minimise
+    def Loss(self, YLEFT, YRIGHT):
+    # when split I need to retrieve nb_observations from left and right side
         n_left = len(YLEFT)
         n_right = len(YRIGHT)
-        #Calculating the sum of it for the loss + check of zero
+
+        # Calculating the sum of it for the loss + check of zero
         total = int(n_left) + int(n_right)
         if total == 0:
             raise ValueError("Dividing by zero is not allowed ! \n")
-        #calculating the loss
-        _LEFT = (n_left/total) * self.Gini(YLEFT)
-        _RIGHT = (n_right/total) * self.Gini(YRIGHT)
-    
+
+        # calculating the loss according to criterion
+        if self.criterion == "gini":
+            _LEFT = (n_left / total) * self.Gini(YLEFT)
+            _RIGHT = (n_right / total) * self.Gini(YRIGHT)
+        else:  # entropy
+            _LEFT = (n_left / total) * self.Entropy(YLEFT)
+            _RIGHT = (n_right / total) * self.Entropy(YRIGHT)
+
         return _LEFT + _RIGHT
 
     #in this function, I calculate my thresholds to perform my splitting based on the loss result later on
@@ -239,3 +263,11 @@ if __name__ == "__main__":
         tree.fit(X, y)
         
         drawFunction(tree,X,y,title=f"Decision Tree (CART Gini) on {names[i]}")
+    
+        #using entropy
+        tree = Tree(criterion="entropy")
+        tree.fit(X, y)
+        
+        drawFunction(tree,X,y,title=f"Decision Tree (CART Entropy) on {names[i]}")
+
+
