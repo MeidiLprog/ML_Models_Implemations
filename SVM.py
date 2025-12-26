@@ -73,9 +73,10 @@ class SVM:
         #now we buil the function to maximize
 
         K = self.kernel_calculation(X)
-        K = (K + K.T) / 2 
+        K = (K + K.T) / 2 #other possibility: using X^T @ X  same principle
         #here thanks to quad_form we understand the relation between points and weights alpha i and x i
         #but before since I ran into issues with cp I have to check whether K is SPD so check whether the lower lambda is > 0
+        # This section has been removed as I tried to make the Matrix SPD, by forcing eigenvalues to be > 0, but noticed that it would change my matrix
         '''
         eigvals = np.linalg.eigvalsh(K)
         print(f"Lowest eigen value {eigvals.min()}\n")
@@ -168,4 +169,5 @@ if __name__ == '__main__':
                 plt.xlabel("x1", fontsize=12)
                 plt.ylabel("x2",fontsize=12)
                 plt.show()
+
     except ValueError: print("An error occured during the test!\n")
